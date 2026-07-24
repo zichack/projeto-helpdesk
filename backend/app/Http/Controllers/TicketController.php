@@ -60,7 +60,7 @@ class TicketController extends Controller
     // visualizar detalhes do chamado
     public function show($id)
     {
-        $ticket = Ticket::with(['categoria', 'solicitante', 'responsavel'])->findOrFail($id);
+        $ticket = Ticket::with(['categoria', 'solicitante', 'responsavel', 'comentarios'])->findOrFail($id);
         return response()->json($ticket);
     }
 
@@ -74,7 +74,7 @@ class TicketController extends Controller
             'descricao' => 'sometimes|string',
             'categoria_id' => 'sometimes|exists:categories,id',
             'prioridade' => 'sometimes|in:Baixa,Média,Alta',
-            'status' => 'sometimes|in:Crítica,Aberto,Em Atendimento,Aguardando Usuário,Finalizado',
+            'status' => 'sometimes|in:Crítico,Aberto,Em Atendimento,Aguardando Usuário,Finalizado',
             'prazo_atendimento' => 'sometimes|date',
             'responsavel_id' => 'nullable|exists:users,id'
         ]);

@@ -193,7 +193,7 @@ export default function Dashboard() {
                             onChange={e => setFilters({...filters, status: e.target.value})}
                         >
                             <option value="">Todos Status</option>
-                            <option value="Crítica">Crítica</option>
+                            <option value="Crítico">Crítico</option>
                             <option value="Aberto">Aberto</option>
                             <option value="Em Atendimento">Em Atendimento</option>
                             <option value="Aguardando Usuário">Aguardando Usuário</option>
@@ -272,7 +272,7 @@ export default function Dashboard() {
                                                 <span className={`px-3 py-1 rounded-full text-xs font-medium 
                                                     ${chamado.status === 'Finalizado' ? 'bg-green-100 text-green-700' : 
                                                       chamado.status === 'Em Atendimento' ? 'bg-purple-100 text-purple-700' : 
-                                                      chamado.status === 'Crítica' ? 'bg-red-100 text-red-700' : 
+                                                      chamado.status === 'Crítico' ? 'bg-red-100 text-red-700' : 
                                                       'bg-yellow-100 text-yellow-700'}`}>
                                                     {chamado.status}
                                                 </span>

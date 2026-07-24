@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('descricao');
             $table->foreignId('categoria_id')->constrained('categories');
             $table->enum('prioridade', ['Baixa', 'Média', 'Alta']);
-            $table->enum('status', ['Crítica', 'Aberto', 'Em Atendimento', 'Aguardando Usuário', 'Finalizado'])->default('Aberto');
+            $table->enum('status', ['Crítico', 'Aberto', 'Em Atendimento', 'Aguardando Usuário', 'Finalizado'])->default('Aberto');
             $table->foreignId('responsavel_id')->nullable()->constrained('users');
             $table->foreignId('solicitante_id')->constrained('users');
             $table->date('prazo_atendimento');

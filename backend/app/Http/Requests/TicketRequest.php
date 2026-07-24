@@ -23,6 +23,7 @@ class TicketRequest extends FormRequest
             'categoria_id' => 'required|exists:categories,id',
             'prioridade' => 'required|in:Baixa,Média,Alta',
             'prazo_atendimento' => 'required|date|after_or_equal:today',
+            'responsavel_id' => 'nullable|exists:users,id'
         ];
     }
 }

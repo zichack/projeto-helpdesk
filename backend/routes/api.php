@@ -16,4 +16,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/categorias', [CategoryController::class, 'index']);
     Route::apiResource('/chamados', TicketController::class);
     Route::post('/chamados/{ticket}/comentarios', [CommentController::class, 'store']);
+    Route::patch('chamados/{id}/finalizar', [TicketController::class, 'finalizar']);
 });

@@ -63,4 +63,17 @@ class TicketController extends Controller
 
         return response()->json(['message' => 'Chamado excluído com sucesso.']);
     }
+
+    public function finalizar($id)
+    {
+        $ticket = Ticket::findOrFail($id);
+
+        if ($ticket->comentarios()->count() === 0) {
+            return response()->json(['error' => 'Não é possível finalizar um chamado sem adicionar um comentário com a solução.'], 403);
+        }
+
+        $ticket->update(['status' => 'Finalizado']);
+
+        return response()->json($ticket);
+    }
 }

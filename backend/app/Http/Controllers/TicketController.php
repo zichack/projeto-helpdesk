@@ -38,6 +38,10 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
         
+        if ($request->status === 'Finalizado' && $ticket->comentarios()->count() === 0) {
+            return response()->json(['error' => 'Um chamado somente poderá ser finalizado caso possua pelo menos um comentário contendo a solução aplicada.'], 403);
+        }
+
         // atualiza apenas campos permitidos
         $ticket->update($request->only([
             'assunto', 'descricao', 'categoria_id', 'prioridade', 'status', 'prazo_atendimento', 'responsavel_id'

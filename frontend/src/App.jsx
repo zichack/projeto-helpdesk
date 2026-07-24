@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './contexts/AuthContext';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import NovoChamado from './pages/NovoChamado';
 
 const PrivateRoute = ({ children }) => {
   const { signed, loading } = useContext(AuthContext);
@@ -21,12 +23,16 @@ function App() {
         
         <Route path="/" element={
           <PrivateRoute>
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center gap-4">
-              <h1 className="text-4xl font-bold text-green-600">Login realizado com sucesso!</h1>
-              <p className="text-gray-600 text-lg">Seu Token JWT está salvo e funcionando.</p>
-            </div>
+             <Dashboard />
           </PrivateRoute>
         } />
+
+        <Route path="/novo-chamado" element={
+          <PrivateRoute>
+            <NovoChamado />
+          </PrivateRoute>
+        } />
+        
       </Routes>
     </BrowserRouter>
   );

@@ -30,12 +30,13 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => bcrypt($request->password),
         ]);
 
-        $token = $this->guard()->login($user);
-
-        return $this->respondWithToken($token);
+        return response()->json([
+            'message' => 'Usuário cadastrado com sucesso!',
+            'user' => $user
+        ], 201);
     }
 
     public function me()

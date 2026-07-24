@@ -4,6 +4,7 @@ import { AuthContext } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import NovoChamado from './pages/NovoChamado';
+import DetalhesChamado from './pages/DetalhesChamado';
 
 const PrivateRoute = ({ children }) => {
   const { signed, loading } = useContext(AuthContext);
@@ -32,7 +33,13 @@ function App() {
             <NovoChamado />
           </PrivateRoute>
         } />
-        
+
+        <Route path="/chamados/:id" element={
+          <PrivateRoute>
+            <DetalhesChamado />
+          </PrivateRoute>
+        } />
+
       </Routes>
     </BrowserRouter>
   );

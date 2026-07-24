@@ -17,6 +17,8 @@ export default function NovoChamado() {
         prazo_atendimento: ''
     });
 
+    const hoje = new Date().toISOString().split('T')[0];
+
     // busca categorias na API
     useEffect(() => {
         async function loadCategorias() {
@@ -126,6 +128,7 @@ export default function NovoChamado() {
                                     type="date"
                                     name="prazo_atendimento"
                                     required
+                                    min={hoje}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                     value={formData.prazo_atendimento}
                                     onChange={handleChange}

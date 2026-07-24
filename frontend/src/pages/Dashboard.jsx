@@ -66,6 +66,7 @@ export default function Dashboard() {
                                             <th className="p-4 font-medium">Assunto</th>
                                             <th className="p-4 font-medium">Status</th>
                                             <th className="p-4 font-medium">Prioridade</th>
+                                            <th className="p-4 font-medium text-right">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -79,6 +80,11 @@ export default function Dashboard() {
                                                     </span>
                                                 </td>
                                                 <td className="p-4 text-gray-600">{chamado.prioridade}</td>
+                                                <td className="p-4 text-right">
+                                                    <Link to={`/chamados/${chamado.id}`} className="text-blue-600 font-medium hover:underline">
+                                                        Abrir
+                                                    </Link>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>

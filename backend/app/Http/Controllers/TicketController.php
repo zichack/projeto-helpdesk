@@ -8,9 +8,40 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::with(['categoria', 'solicitante', 'responsavel'])->paginate(10);
+        $query = Ticket::with(['categoria', 'solicitante', 'responsavel']);
+
+        if ($request->filled('assunto')) {
+            $query->where('assunto', 'like', '%' . $request->assunto . '%');
+        }
+
+        if ($request->filled('solicitante')) {
+            $query->whereHas('solicitante', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->solicitante . '%');
+            });
+        }
+
+        if ($request->filled('categoria_id')) {
+            $query->where('categoria_id', $request->categoria_id);
+        }
+        if ($request->filled('prioridade')) {
+            $query->where('prioridade', $request->prioridade);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $orderBy = $request->input('order_by', 'created_at');
+        $orderDir = $request->input('order_dir', 'desc');
+        
+        $allowedColumns = ['id', 'assunto', 'status', 'prioridade', 'created_at', 'prazo_atendimento'];
+        if (in_array($orderBy, $allowedColumns) && in_array(strtolower($orderDir), ['asc', 'desc'])) {
+            $query->orderBy($orderBy, $orderDir);
+        }
+
+        $tickets = $query->paginate(10)->appends($request->all());
+
         return response()->json($tickets);
     }
 

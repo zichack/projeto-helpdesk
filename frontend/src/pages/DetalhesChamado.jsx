@@ -73,6 +73,12 @@ export default function DetalhesChamado() {
         return new Date(dataStr).toLocaleString('pt-BR');
     };
 
+    const formatData = (dataStr) => {
+        if (!dataStr) return '-';
+        const [ano, mes, dia] = dataStr.split('-');
+        return `${dia}/${mes}/${ano}`;
+    };
+
     if (loading) return <div className="p-8 text-center text-gray-500">Carregando detalhes...</div>;
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
     if (!chamado) return <div className="p-8 text-center text-gray-500">Chamado não encontrado.</div>;
@@ -213,7 +219,7 @@ export default function DetalhesChamado() {
                                 </li>
                                 <li>
                                     <span className="block text-gray-500 mb-1">Prazo</span>
-                                    <span className="text-gray-800 font-medium">{chamado.prazo_atendimento}</span>
+                                    <span className="text-gray-800 font-medium">{formatData(chamado.prazo_atendimento)}</span>
                                 </li>
                             </ul>
                         </div>

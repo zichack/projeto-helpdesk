@@ -47,11 +47,15 @@ export default function Dashboard() {
 
             <main className="max-w-5xl mx-auto px-6 py-8">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold text-gray-800">Visão Geral</h2>
-                    <Link to="/novo-chamado" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                        <PlusCircle size={20} />
-                        Novo Chamado
-                    </Link>
+                    <div className="flex gap-3">
+                        <Link to="/categorias" className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg transition-colors font-medium">
+                            Categorias
+                        </Link>
+                        <Link to="/novo-chamado" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                            <PlusCircle size={20} />
+                            Novo Chamado
+                        </Link>
+                    </div>
                 </div>
 
                 {loading ? (

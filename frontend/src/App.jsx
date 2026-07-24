@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import NovoChamado from './pages/NovoChamado';
 import DetalhesChamado from './pages/DetalhesChamado';
 import Cadastro from './pages/Cadastro';
+import Categorias from './pages/Categorias';
 
 const PrivateRoute = ({ children }) => {
   const { signed, loading } = useContext(AuthContext);
@@ -39,6 +40,12 @@ function App() {
         <Route path="/chamados/:id" element={
           <PrivateRoute>
             <DetalhesChamado />
+          </PrivateRoute>
+        } />
+
+        <Route path="/categorias" element={
+          <PrivateRoute>
+            <Categorias />
           </PrivateRoute>
         } />
 

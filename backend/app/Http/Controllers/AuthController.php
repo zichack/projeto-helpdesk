@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -13,7 +12,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$token = $this->guard()->attempt($credentials)) {
             return response()->json(['error' => 'Credenciais inválidas'], 401);
         }
 
@@ -34,19 +33,19 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = auth('api')->login($user);
+        $token = $this->guard()->login($user);
 
         return $this->respondWithToken($token);
     }
 
     public function me()
     {
-        return response()->json(auth('api')->user());
+        return response()->json($this->guard()->user());
     }
 
     public function logout()
     {
-        auth('api')->logout();
+        $this->guard()->logout();
 
         return response()->json(['message' => 'Logout realizado com sucesso']);
     }
@@ -56,8 +55,19 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'user' => auth('api')->user()
+            'expires_in' => $this->guard()->factory()->getTTL() * 60,
+            'user' => $this->guard()->user()
         ]);
+    }
+
+    /**
+     * retorna guard configurado para o JWT para que o vscode
+     * pare de acusar métodos inexistentes.
+     *
+     * @return \PHPOpenSourceSaver\JWTAuth\JWTGuard
+     */
+    protected function guard()
+    {
+        return auth('api');
     }
 }

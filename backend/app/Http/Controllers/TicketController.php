@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\History;
 use App\Http\Requests\TicketRequest;
 use Illuminate\Http\Request;
 
@@ -54,13 +55,27 @@ class TicketController extends Controller
         
         $ticket = Ticket::create($data);
 
+        // registra histórico de criação
+        History::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => auth()->id(),
+            'alteracao_realizada' => 'Chamado criado'
+        ]);
+
         return response()->json($ticket, 201);
     }
 
     // visualizar detalhes do chamado
     public function show($id)
     {
-        $ticket = Ticket::with(['categoria', 'solicitante', 'responsavel', 'comentarios'])->findOrFail($id);
+        $ticket = Ticket::with([
+            'categoria', 
+            'solicitante', 
+            'responsavel', 
+            'comentarios', 
+            'histories.user'
+        ])->findOrFail($id);
+        
         return response()->json($ticket);
     }
 
@@ -81,6 +96,41 @@ class TicketController extends Controller
         
         if ($request->status === 'Finalizado' && $ticket->comentarios()->count() === 0) {
             return response()->json(['error' => 'Um chamado somente poderá ser finalizado caso possua pelo menos um comentário contendo a solução aplicada.'], 403);
+        }
+
+        $userId = auth()->id();
+
+        // detecta mudanças para registrar no histórico
+        if (isset($validatedData['status']) && $ticket->status !== $validatedData['status']) {
+            History::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => $userId,
+                'alteracao_realizada' => "Status alterado de '{$ticket->status}' para '{$validatedData['status']}'"
+            ]);
+        }
+
+        if (isset($validatedData['prioridade']) && $ticket->prioridade !== $validatedData['prioridade']) {
+            History::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => $userId,
+                'alteracao_realizada' => "Prioridade alterada de '{$ticket->prioridade}' para '{$validatedData['prioridade']}'"
+            ]);
+        }
+
+        if (array_key_exists('responsavel_id', $validatedData) && $ticket->responsavel_id !== $validatedData['responsavel_id']) {
+            History::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => $userId,
+                'alteracao_realizada' => "Responsável alterado"
+            ]);
+        }
+
+        if (isset($validatedData['categoria_id']) && $ticket->categoria_id !== $validatedData['categoria_id']) {
+            History::create([
+                'ticket_id' => $ticket->id,
+                'user_id' => $userId,
+                'alteracao_realizada' => "Categoria alterada"
+            ]);
         }
 
         $ticket->update($validatedData);
@@ -112,6 +162,12 @@ class TicketController extends Controller
 
         $ticket->update(['status' => 'Finalizado']);
 
+        History::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => auth()->id(),
+            'alteracao_realizada' => "Status alterado para Finalizado"
+        ]);
+
         return response()->json($ticket);
     }
 
@@ -124,7 +180,6 @@ class TicketController extends Controller
             'abertos' => Ticket::where('status', 'Aberto')->count(),
             'em_atendimento' => Ticket::where('status', 'Em Atendimento')->count(),
             'finalizados' => Ticket::where('status', 'Finalizado')->count(),
-            // Atrasados: Status diferente de Finalizado com prazo menor que a data de hoje
             'atrasados' => Ticket::where('status', '!=', 'Finalizado')
                                  ->whereDate('prazo_atendimento', '<', $hoje)
                                  ->count(),

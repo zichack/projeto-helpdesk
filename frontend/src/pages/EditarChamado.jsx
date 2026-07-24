@@ -149,10 +149,10 @@ export default function EditarChamado() {
                                     value={formData.status}
                                     onChange={handleChange}
                                 >
+                                    <option value="Crítico">Crítico</option>
                                     <option value="Aberto">Aberto</option>
                                     <option value="Em Atendimento">Em Atendimento</option>
                                     <option value="Aguardando Usuário">Aguardando Usuário</option>
-                                    <option value="Finalizado">Finalizado</option>
                                 </select>
                             </div>
 

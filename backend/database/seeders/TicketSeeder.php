@@ -37,8 +37,8 @@ class TicketSeeder extends Seeder
             'Queda constante na conexão de internet cabeada'
         ];
 
-        $prioridades = ['Baixa', 'Média', 'Alta'];
-        $statusList = ['Crítico', 'Aberto', 'Em Atendimento', 'Aguardando Usuário', 'Finalizado'];
+        $prioridades = ['Baixa', 'Média', 'Alta', 'Crítico'];
+        $statusList = ['Aberto', 'Em Atendimento', 'Aguardando Usuário', 'Finalizado'];
 
         for ($i = 0; $i < 15; $i++) {
             Ticket::create([
@@ -48,7 +48,7 @@ class TicketSeeder extends Seeder
                 'prioridade' => $prioridades[array_rand($prioridades)],
                 'status' => $statusList[array_rand($statusList)],
                 'solicitante_id' => $users[array_rand($users)],
-                'responsavel_id' => rand(0, 1) ? $users[array_rand($users)] : null, // alguns sem responsável
+                'responsavel_id' => rand(0, 1) ? $users[array_rand($users)] : null,
                 'prazo_atendimento' => Carbon::now()->addDays(rand(1, 15))->toDateString(),
             ]);
         }

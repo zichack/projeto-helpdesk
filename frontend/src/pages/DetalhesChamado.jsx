@@ -79,6 +79,22 @@ export default function DetalhesChamado() {
         return `${dia}/${mes}/${ano}`;
     };
 
+    // helper unificado de cores para o status
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Aberto':
+                return 'bg-blue-100 text-blue-700 border border-blue-200';
+            case 'Em Atendimento':
+                return 'bg-amber-100 text-amber-800 border border-amber-200';
+            case 'Aguardando Usuário':
+                return 'bg-purple-100 text-purple-700 border border-purple-200';
+            case 'Finalizado':
+                return 'bg-green-100 text-green-700 border border-green-200';
+            default:
+                return 'bg-gray-100 text-gray-700 border border-gray-200';
+        }
+    };
+
     if (loading) return <div className="p-8 text-center text-gray-500">Carregando detalhes...</div>;
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
     if (!chamado) return <div className="p-8 text-center text-gray-500">Chamado não encontrado.</div>;
@@ -201,7 +217,7 @@ export default function DetalhesChamado() {
                             <ul className="space-y-4 text-sm">
                                 <li>
                                     <span className="block text-gray-500 mb-1">Status</span>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${chamado.status === 'Finalizado' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium inline-block ${getStatusColor(chamado.status)}`}>
                                         {chamado.status}
                                     </span>
                                 </li>

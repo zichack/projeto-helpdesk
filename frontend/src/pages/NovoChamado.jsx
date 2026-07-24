@@ -123,6 +123,7 @@ export default function NovoChamado() {
                                     <option value="Baixa">Baixa</option>
                                     <option value="Média">Média</option>
                                     <option value="Alta">Alta</option>
+                                    <option value="Crítico">Crítico</option>
                                 </select>
                             </div>
 

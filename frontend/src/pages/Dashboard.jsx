@@ -99,6 +99,22 @@ export default function Dashboard() {
 
     const formatData = (dataStr) => new Date(dataStr).toLocaleDateString('pt-BR');
 
+    // helper unificado de cores para o status
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Aberto':
+                return 'bg-blue-100 text-blue-700 border border-blue-200';
+            case 'Em Atendimento':
+                return 'bg-amber-100 text-amber-800 border border-amber-200';
+            case 'Aguardando Usuário':
+                return 'bg-purple-100 text-purple-700 border border-purple-200';
+            case 'Finalizado':
+                return 'bg-green-100 text-green-700 border border-green-200';
+            default:
+                return 'bg-gray-100 text-gray-700 border border-gray-200';
+        }
+    };
+
     if (loadingInitial) {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Carregando painel...</div>;
     }
@@ -193,7 +209,6 @@ export default function Dashboard() {
                             onChange={e => setFilters({...filters, status: e.target.value})}
                         >
                             <option value="">Todos Status</option>
-                            <option value="Crítico">Crítico</option>
                             <option value="Aberto">Aberto</option>
                             <option value="Em Atendimento">Em Atendimento</option>
                             <option value="Aguardando Usuário">Aguardando Usuário</option>
@@ -209,6 +224,7 @@ export default function Dashboard() {
                             <option value="Baixa">Baixa</option>
                             <option value="Média">Média</option>
                             <option value="Alta">Alta</option>
+                            <option value="Crítico">Crítico</option>
                         </select>
                     </div>
 
@@ -269,11 +285,7 @@ export default function Dashboard() {
                                             <td className="p-4 font-medium text-gray-800">{chamado.assunto}</td>
                                             <td className="p-4 text-sm text-gray-600">{chamado.solicitante?.name || '-'}</td>
                                             <td className="p-4">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-medium 
-                                                    ${chamado.status === 'Finalizado' ? 'bg-green-100 text-green-700' : 
-                                                      chamado.status === 'Em Atendimento' ? 'bg-purple-100 text-purple-700' : 
-                                                      chamado.status === 'Crítico' ? 'bg-red-100 text-red-700' : 
-                                                      'bg-yellow-100 text-yellow-700'}`}>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(chamado.status)}`}>
                                                     {chamado.status}
                                                 </span>
                                             </td>

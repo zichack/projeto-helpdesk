@@ -80,8 +80,8 @@ class TicketController extends Controller
             'assunto' => 'sometimes|string|max:255',
             'descricao' => 'sometimes|string',
             'categoria_id' => 'sometimes|exists:categories,id',
-            'prioridade' => 'sometimes|in:Baixa,Média,Alta',
-            'status' => 'sometimes|in:Crítico,Aberto,Em Atendimento,Aguardando Usuário,Finalizado',
+            'prioridade' => 'sometimes|in:Baixa,Média,Alta,Crítico',
+            'status' => 'sometimes|in:Aberto,Em Atendimento,Aguardando Usuário,Finalizado',
             'prazo_atendimento' => 'sometimes|date',
             'responsavel_id' => 'nullable|exists:users,id'
         ]);

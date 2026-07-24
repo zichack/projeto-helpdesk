@@ -149,7 +149,6 @@ export default function EditarChamado() {
                                     value={formData.status}
                                     onChange={handleChange}
                                 >
-                                    <option value="Crítico">Crítico</option>
                                     <option value="Aberto">Aberto</option>
                                     <option value="Em Atendimento">Em Atendimento</option>
                                     <option value="Aguardando Usuário">Aguardando Usuário</option>
@@ -168,6 +167,7 @@ export default function EditarChamado() {
                                     <option value="Baixa">Baixa</option>
                                     <option value="Média">Média</option>
                                     <option value="Alta">Alta</option>
+                                    <option value="Crítico">Crítico</option>
                                 </select>
                             </div>
 

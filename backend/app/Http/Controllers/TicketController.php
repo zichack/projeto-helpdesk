@@ -76,4 +76,20 @@ class TicketController extends Controller
 
         return response()->json($ticket);
     }
+
+    public function estatisticas()
+    {
+        $hoje = now()->toDateString();
+        
+        return response()->json([
+            'total' => Ticket::count(),
+            'abertos' => Ticket::where('status', 'Aberto')->count(),
+            'em_atendimento' => Ticket::where('status', 'Em Atendimento')->count(),
+            'finalizados' => Ticket::where('status', 'Finalizado')->count(),
+            // Atrasados: Status diferente de Finalizado com prazo menor que a data de hoje
+            'atrasados' => Ticket::where('status', '!=', 'Finalizado')
+                                 ->whereDate('prazo_atendimento', '<', $hoje)
+                                 ->count(),
+        ]);
+    }
 }

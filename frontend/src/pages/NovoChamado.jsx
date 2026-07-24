@@ -6,12 +6,14 @@ import { ArrowLeft, Save } from 'lucide-react';
 export default function NovoChamado() {
     const navigate = useNavigate();
     const [categorias, setCategorias] = useState([]);
+    const [usuarios, setUsuarios] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const [formData, setFormData] = useState({
         assunto: '',
         categoria_id: '',
+        responsavel_id: '',
         prioridade: 'Baixa',
         descricao: '',
         prazo_atendimento: ''
@@ -19,21 +21,25 @@ export default function NovoChamado() {
 
     const hoje = new Date().toISOString().split('T')[0];
 
-    // busca categorias na API
     useEffect(() => {
-        async function loadCategorias() {
+        async function loadData() {
             try {
-                const response = await api.get('/categorias');
-                setCategorias(response.data);
-                // seleciona primeira categoria por padrão
-                if(response.data.length > 0) {
-                    setFormData(prev => ({ ...prev, categoria_id: response.data[0].id }));
+                const [catRes, usrRes] = await Promise.all([
+                    api.get('/categorias'),
+                    api.get('/usuarios')
+                ]);
+                
+                setCategorias(catRes.data);
+                setUsuarios(usrRes.data);
+                
+                if(catRes.data.length > 0) {
+                    setFormData(prev => ({ ...prev, categoria_id: catRes.data[0].id }));
                 }
             } catch (err) {
-                console.error("Erro ao carregar categorias", err);
+                console.error("Erro ao carregar dados do formulário", err);
             }
         }
-        loadCategorias();
+        loadData();
     }, []);
 
     const handleChange = (e) => {
@@ -120,9 +126,24 @@ export default function NovoChamado() {
                                 </select>
                             </div>
 
-                            <div className="md:col-span-2">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Responsável (Opcional)</label>
+                                <select
+                                    name="responsavel_id"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                                    value={formData.responsavel_id}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Atribuir depois</option>
+                                    {usuarios.map(usr => (
+                                        <option key={usr.id} value={usr.id}>{usr.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Prazo de Atendimento (Não pode ser retroativo) *
+                                    Prazo de Atendimento *
                                 </label>
                                 <input
                                     type="date"

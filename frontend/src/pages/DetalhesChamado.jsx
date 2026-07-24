@@ -141,6 +141,14 @@ export default function DetalhesChamado() {
                                     </span>
                                 </li>
                                 <li>
+                                    <span className="block text-gray-500 mb-1">Solicitante</span>
+                                    <span className="text-gray-800 font-medium">{chamado.solicitante?.name || 'Desconhecido'}</span>
+                                </li>
+                                <li>
+                                    <span className="block text-gray-500 mb-1">Responsável</span>
+                                    <span className="text-gray-800 font-medium">{chamado.responsavel?.name || 'Não atribuído'}</span>
+                                </li>
+                                <li>
                                     <span className="block text-gray-500 mb-1">Prioridade</span>
                                     <span className="text-gray-800 font-medium">{chamado.prioridade}</span>
                                 </li>

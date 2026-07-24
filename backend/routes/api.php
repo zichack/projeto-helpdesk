@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -12,6 +13,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    Route::get('/usuarios', [UserController::class, 'index']);
 
     Route::apiResource('/categorias', CategoryController::class);
 

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom'; // <-- useNavigate adicionado
 import api from '../services/api';
-import { ArrowLeft, Send, CheckCircle, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Send, CheckCircle, MessageSquare, Trash2, Edit } from 'lucide-react'; // <-- Importação única
 
 export default function DetalhesChamado() {
-    const { id } = useParams(); // Pega o ID da URL
+    const { id } = useParams();
+    const navigate = useNavigate();
     
     const [chamado, setChamado] = useState(null);
     const [comentarios, setComentarios] = useState([]);
@@ -37,8 +38,6 @@ export default function DetalhesChamado() {
 
         try {
             const response = await api.post(`/chamados/${id}/comentarios`, { texto: novoComentario });
-            
-            // add novo comentário
             setComentarios([...comentarios, response.data]);
             setNovoComentario('');
         } catch (err) {
@@ -49,11 +48,23 @@ export default function DetalhesChamado() {
     const handleFinalizar = async () => {
         try {
             await api.patch(`/chamados/${id}/finalizar`);
-            
             setChamado({ ...chamado, status: 'Finalizado' });
             alert('Atendimento encerrado com sucesso!');
         } catch (err) {
             alert(err.response?.data?.error || 'Erro ao finalizar chamado.');
+        }
+    };
+
+    const handleExcluir = async () => {
+        const confirmar = window.confirm('Tem certeza que deseja excluir este chamado? Essa ação não pode ser desfeita.');
+        if (!confirmar) return;
+
+        try {
+            await api.delete(`/chamados/${id}`);
+            alert('Chamado excluído com sucesso!');
+            navigate('/');
+        } catch (err) {
+            alert(err.response?.data?.error || 'Erro ao excluir o chamado.');
         }
     };
 
@@ -75,15 +86,36 @@ export default function DetalhesChamado() {
                         </div>
                     </div>
                     
-                    {chamado.status !== 'Finalizado' && (
+                    {/* 👇 NOVOS BOTÕES NO HEADER 👇 */}
+                    <div className="flex gap-3">
+                        {chamado.status !== 'Finalizado' && (
+                            <Link 
+                                to={`/chamados/${chamado.id}/editar`}
+                                className="bg-white hover:bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                            >
+                                <Edit size={20} />
+                                Editar
+                            </Link>
+                        )}
+
                         <button 
-                            onClick={handleFinalizar}
-                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                            onClick={handleExcluir}
+                            className="bg-white hover:bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
                         >
-                            <CheckCircle size={20} />
-                            Finalizar Atendimento
+                            <Trash2 size={20} />
+                            Excluir
                         </button>
-                    )}
+                        
+                        {chamado.status !== 'Finalizado' && (
+                            <button 
+                                onClick={handleFinalizar}
+                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                            >
+                                <CheckCircle size={20} />
+                                Finalizar
+                            </button>
+                        )}
+                    </div>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

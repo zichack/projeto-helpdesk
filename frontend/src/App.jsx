@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import NovoChamado from './pages/NovoChamado';
 import DetalhesChamado from './pages/DetalhesChamado';
+import EditarChamado from './pages/EditarChamado';
 import Cadastro from './pages/Cadastro';
 import Categorias from './pages/Categorias';
 
@@ -40,6 +41,12 @@ function App() {
         <Route path="/chamados/:id" element={
           <PrivateRoute>
             <DetalhesChamado />
+          </PrivateRoute>
+        } />
+
+        <Route path="/chamados/:id/editar" element={
+          <PrivateRoute>
+            <EditarChamado />
           </PrivateRoute>
         } />
 

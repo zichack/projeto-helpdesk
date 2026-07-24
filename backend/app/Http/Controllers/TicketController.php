@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
-use App\Models\History;
 use App\Http\Requests\TicketRequest;
 use Illuminate\Http\Request;
 
@@ -55,13 +54,6 @@ class TicketController extends Controller
         
         $ticket = Ticket::create($data);
 
-        // registra histórico de criação
-        History::create([
-            'ticket_id' => $ticket->id,
-            'user_id' => auth()->id(),
-            'alteracao_realizada' => 'Chamado criado'
-        ]);
-
         return response()->json($ticket, 201);
     }
 
@@ -98,41 +90,6 @@ class TicketController extends Controller
             return response()->json(['error' => 'Um chamado somente poderá ser finalizado caso possua pelo menos um comentário contendo a solução aplicada.'], 403);
         }
 
-        $userId = auth()->id();
-
-        // detecta mudanças para registrar no histórico
-        if (isset($validatedData['status']) && $ticket->status !== $validatedData['status']) {
-            History::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $userId,
-                'alteracao_realizada' => "Status alterado de '{$ticket->status}' para '{$validatedData['status']}'"
-            ]);
-        }
-
-        if (isset($validatedData['prioridade']) && $ticket->prioridade !== $validatedData['prioridade']) {
-            History::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $userId,
-                'alteracao_realizada' => "Prioridade alterada de '{$ticket->prioridade}' para '{$validatedData['prioridade']}'"
-            ]);
-        }
-
-        if (array_key_exists('responsavel_id', $validatedData) && $ticket->responsavel_id !== $validatedData['responsavel_id']) {
-            History::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $userId,
-                'alteracao_realizada' => "Responsável alterado"
-            ]);
-        }
-
-        if (isset($validatedData['categoria_id']) && $ticket->categoria_id !== $validatedData['categoria_id']) {
-            History::create([
-                'ticket_id' => $ticket->id,
-                'user_id' => $userId,
-                'alteracao_realizada' => "Categoria alterada"
-            ]);
-        }
-
         $ticket->update($validatedData);
 
         return response()->json($ticket);
@@ -161,12 +118,6 @@ class TicketController extends Controller
         }
 
         $ticket->update(['status' => 'Finalizado']);
-
-        History::create([
-            'ticket_id' => $ticket->id,
-            'user_id' => auth()->id(),
-            'alteracao_realizada' => "Status alterado para Finalizado"
-        ]);
 
         return response()->json($ticket);
     }

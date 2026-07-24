@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom'; // <-- useNavigate adicionado
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { ArrowLeft, Send, CheckCircle, MessageSquare, Trash2, Edit } from 'lucide-react'; // <-- Importação única
+import { ArrowLeft, Send, CheckCircle, MessageSquare, Trash2, Edit, History } from 'lucide-react';
 
 export default function DetalhesChamado() {
     const { id } = useParams();
@@ -68,6 +68,11 @@ export default function DetalhesChamado() {
         }
     };
 
+    // helper para formatar data e hora do histórico
+    const formatDataHora = (dataStr) => {
+        return new Date(dataStr).toLocaleString('pt-BR');
+    };
+
     if (loading) return <div className="p-8 text-center text-gray-500">Carregando detalhes...</div>;
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
     if (!chamado) return <div className="p-8 text-center text-gray-500">Chamado não encontrado.</div>;
@@ -86,7 +91,6 @@ export default function DetalhesChamado() {
                         </div>
                     </div>
                     
-                    {/* 👇 NOVOS BOTÕES NO HEADER 👇 */}
                     <div className="flex gap-3">
                         {chamado.status !== 'Finalizado' && (
                             <Link 
@@ -125,6 +129,7 @@ export default function DetalhesChamado() {
                             <p className="text-gray-600 whitespace-pre-wrap">{chamado.descricao}</p>
                         </div>
 
+                        {/* Seção de Comentários */}
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                 <MessageSquare size={20} /> Comentários
@@ -146,7 +151,7 @@ export default function DetalhesChamado() {
                                 <form onSubmit={handleComentar} className="flex gap-2">
                                     <input
                                         type="text"
-                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
                                         placeholder="Adicione um comentário com a solução..."
                                         value={novoComentario}
                                         onChange={(e) => setNovoComentario(e.target.value)}
@@ -159,6 +164,28 @@ export default function DetalhesChamado() {
                                     </button>
                                 </form>
                             )}
+                        </div>
+
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                <History size={20} /> Histórico de Alterações
+                            </h2>
+                            
+                            <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                                {!chamado.histories || chamado.histories.length === 0 ? (
+                                    <p className="text-gray-400 text-sm italic">Nenhum histórico registrado.</p>
+                                ) : (
+                                    chamado.histories.map(history => (
+                                        <div key={history.id} className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-sm">
+                                            <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                                <span className="font-medium text-gray-600">{history.user?.name || 'Sistema'}</span>
+                                                <span>{formatDataHora(history.created_at)}</span>
+                                            </div>
+                                            <p className="text-gray-700">{history.alteracao_realizada}</p>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
                         </div>
                     </div>
 

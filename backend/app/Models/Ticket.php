@@ -39,4 +39,9 @@ class Ticket extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'ticket_id');
+    }
 }

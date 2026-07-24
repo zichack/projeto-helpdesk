@@ -1,11 +1,11 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { LogIn } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // 1. Adicione esta importação
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
     const { signIn } = useContext(AuthContext);
-    const navigate = useNavigate(); // 2. Instancie o hook aqui
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -16,7 +16,7 @@ export default function Login() {
         
         try {
             await signIn(email, password);
-            navigate('/'); // 3. Adicione esta linha para redirecionar em caso de sucesso!
+            navigate('/');
         } catch (err) {
             setError('Credenciais inválidas. Verifique seu e-mail e senha.');
         }
@@ -69,6 +69,15 @@ export default function Login() {
                         Entrar no Sistema
                     </button>
                 </form>
+
+                <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-600">
+                        Não tem uma conta?{' '}
+                        <Link to="/cadastro" className="text-blue-600 hover:underline font-medium">
+                            Cadastre-se
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );

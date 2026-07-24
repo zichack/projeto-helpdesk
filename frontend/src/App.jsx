@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import NovoChamado from './pages/NovoChamado';
 import DetalhesChamado from './pages/DetalhesChamado';
+import Cadastro from './pages/Cadastro';
 
 const PrivateRoute = ({ children }) => {
   const { signed, loading } = useContext(AuthContext);
@@ -21,6 +22,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
         
         <Route path="/" element={
           <PrivateRoute>
